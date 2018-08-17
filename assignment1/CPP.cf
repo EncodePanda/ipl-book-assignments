@@ -15,16 +15,25 @@ terminator Stm "" ;
 -- *** Statements ***
 -- Any expression followed by a semicolon ; can be used as a statement. 
 ExpStm. Stm ::= Exp ";" ;
+-- Any declaration followed by a semicolon ; can be used as a statement.
+DecStm. Stm ::= Decl ";" ;
 -- Statements returning an expression
 RetStm. Stm ::= "return" Exp ";" ;
+-- *** Declarations ***
+-- Declarations have the same form as argument declarations in functions,
+MDecl. Decl ::= Type Name ;
+-- except that they can have more than one variable.
+
 -- *** Expressions ***
 IntExp. Exp2 ::= Integer ;
 LitExp. Exp2 ::= Name ;
 StrLitExp. Exp2 ::= String ;
 QualiConstExp. Exp1 ::= QC ;
 LeftShiftExp. Exp ::= Exp "<<" Exp ;
+RightShiftExp. Exp ::= Exp ">>" Exp ;
 coercions Exp 2 ;
 -- *** Types ***
 Tint. Type ::= "int" ;
+TQualifiedConst. Type ::= QC ;
 
 QCM. QC ::= Name "::" Name
