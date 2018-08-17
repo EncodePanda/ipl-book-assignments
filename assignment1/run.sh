@@ -1,6 +1,8 @@
 #!/bin/bash
 ./rebuild.sh
 echo "Example 1"
-./src/TestCPP example1.cc
+./src/TestCPP -s example1.cc
 echo "Example 2"
-./src/TestCPP example2.cc
+./src/TestCPP -s example2.cc
+echo "Example 3"
+./src/TestCPP -s example3.cc
