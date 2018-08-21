@@ -25,14 +25,16 @@ int main()
 	cout << "Please enter your midterm and final exam grades: ";
 	double midterm, final;
 	cin >> midterm >> final;
-  /*
+
 	// ask for and read the homework grades
 	cout << "Enter all your homework grades, "
 	        "followed by end-of-file: ";
 
 	vector<double> homework;
+
 	double x;
 	// invariant: `homework' contains all the homework grades read so far
+
 	while (cin >> x)
 		homework.push_back(x);
 
@@ -42,6 +44,7 @@ int main()
 #else
 	typedef vector<double>::size_type vec_sz;
 #endif
+	/*	
 	vec_sz size = homework.size();
 	if (size == 0) {
 		cout << endl << "You must enter your grades.  "
