@@ -69,18 +69,35 @@ ExpIncrPref. Exp13 ::= "++" Exp ;
 ExpDecPref. Exp13 ::= "--" Exp ;
 ExpNeg. Exp13 ::= "!" Exp ;
 -- 12	e*e, e/e, e%e	multiplication, division, remainder
+ExpMulti. Exp12 ::= Exp "*" Exp ;
+ExpDiv. Exp12 ::= Exp "/" Exp ;
+ExpRem. Exp12 ::= Exp "%" Exp ;
 -- 11	e+e, e-e	addition, subtraction
+ExpAddition. Exp11 ::= Exp "+" Exp ;
+ExpSubtract. Exp11 ::= Exp "-" Exp ;
 -- 10	e<<e, e>>e	left and right shift
 ExpLeftShift. Exp10 ::= Exp "<<" Exp ;
 ExpRightShift. Exp10 ::= Exp ">>" Exp ;
 -- 9	e<e, e>e, e>=e, e<=e	comparison
+ExpCompLt. Exp9 ::= Exp "<" Exp ;
+ExpCompGr. Exp9 ::= Exp ">" Exp ;
+ExpCompLtEq. Exp9 ::= Exp "<=" Exp ;
+ExpCompGrEq. Exp9 ::= Exp ">=" Exp ;
 -- 8	e==e, e!=e	(in)equality
+ExpEquality. Exp8 ::= Exp "==" Exp ;
+ExpInequality. Exp8 ::= Exp "!=" Exp ;
 -- 4	e&&eq	conjunction
+ExpConjunction. Exp4 ::= Exp "&&" Exp ;
 -- 3	e||e	disjunction
+ExpDisjunction. Exp3 ::= Exp "||" Exp ;
 -- 2	e=e, e+=e, e-=e	assignment
+ExpAssignment1. Exp2 ::= Exp "=" Exp ;
+ExpAssignment2. Exp2 ::= Exp "+=" Exp ;
+ExpAssignment3. Exp2 ::= Exp "-=" Exp ;
 -- 2	e ? e : e	conditional
+ExpConditional. Exp2 ::= Exp "?" Exp ":" Exp ;
 -- 1	throw e	exception
-ExpThrow. Exp ::=  "throw" Exp ;
+ExpThrow. Exp1 ::=  "throw" Exp ;
 
 coercions Exp 16 ;
 separator Exp "," ;
