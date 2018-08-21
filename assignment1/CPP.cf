@@ -1,5 +1,6 @@
+-- *** Program *** --
 -- A program is a sequence of definitions. (1)
-DefsProg. Program ::= [Def] ;
+Prog. Program ::= [Def] ;
 terminator Def "" ;
 -- A program may also contain comments and preprocessor directives, which are just ignored by the parser
 comment "//" ;
@@ -9,53 +10,79 @@ comment "#ifndef" ;
 comment "#ifdef" ;
 comment "#else" ;
 comment "/*" "*/" ;
+
 -- *** Definitions *** --
 -- A function definition has a type, a name, an argument list, and a body.
-DefFun. Def ::= Type Name "(" [Arg] ")" "{" Body "}" ;
+DefFun. Def ::= Type Name "(" [Arg] ")" Body ;
 -- A function can optionally be prefixed by inline.
-DefInlineFun. Def ::= "inline" Type Name "(" [Arg] ")" "{" Body "}" ;
+DefInlineFun. Def ::= "inline" Type Name "(" [Arg] ")" Body ;
 -- Finally, definitions for using qualified constants are allowed
 DefQualifiedConst. Def ::= "using" QualifiedConst ";" ;
+
+-- *** Argument lists, declarations and function bodies *** --
 -- An argument list is a comma-separated list of argument declarations. It is enclosed in parentheses ( and ).
 separator Arg "," ;
-MArg. Arg ::= Type Name ;
--- A function body is either a list of statements enclosed in curly brackets { and }
-MBody. Body ::= [Stm] ;
-terminator Stm "" ;
+ArgTypName. Arg ::= Type Name ;
+-- A function body is either a list of statements enclosed in curly brackets
+BodyStmList. Body ::= "{" [Stm] "}" ;
+-- or an empty body consisting of a semicolon
+BodyEmpty. Body ::= ";" ;
+
 -- *** Statements *** --
 -- Any expression followed by a semicolon ; can be used as a statement. 
-ExpStm. Stm ::= Exp ";" ;
+StmExp. Stm ::= Exp ";" ;
 -- Any declaration followed by a semicolon ; can be used as a statement.
-DecStm. Stm ::= Decl ";" ;
+StmDec. Stm ::= Decl ";" ;
 -- Statements returning an expression
-RetStm. Stm ::= "return" Exp ";" ;
+StmRet. Stm ::= "return" Exp ";" ;
 -- While loops, with an expression in parentheses followed by a statement:
 StmWhile. Stm ::= "while" "(" Exp ")" Stm ;
+terminator Stm "" ;
+
 -- *** Declarations ***
 -- Declarations have the same form as argument declarations in functions,
-MDecl. Decl ::= Type DeclNames ;
+DeclTypeNames. Decl ::= Type DeclNames ;
 DeclTypeDef. Decl ::= "typedef" Type DeclNames ;
-DNElem. DeclNames ::= Name ;
-DNCons. DeclNames ::= DeclNames "," Name ;
-
+DecNamesElem. DeclNames ::= Name ;
+DecNamesCons. DeclNames ::= DeclNames "," Name ;
 -- except that they can have more than one variable.
 
 -- *** Expressions *** --
--- atomic expressions
-IntExp. Exp2 ::= Integer ;
-LitExp. Exp2 ::= Name ;
-StrLitExp. Exp2 ::= Str ;
--- indexing and qualified constants
-QualiConstExp. Exp1 ::= QualifiedConst ;
-ExpIndexing. Exp1 ::= Exp "(" Name ")" ;
--- function call
-ExpFuncCall. Exp1 ::= Exp "(" [Exp] ")" ;
--- structure projection
-ExpStructProj1. Exp1 ::= Exp "." Exp ;
-ExpStructProj2. Exp1 ::= Exp "->" Exp ;
-LeftShiftExp. Exp ::= Exp "<<" Exp ;
-RightShiftExp. Exp ::= Exp ">>" Exp ;
-coercions Exp 2 ;
+-- 16	literal	atomic expressions
+ExpInt. Exp16 ::= Integer ;
+ExpLit. Exp16 ::= Name ;
+ExpStrLit. Exp16 ::= Str ;
+-- 15	e[i], c::i	indexing and qualified constants
+ExpQualiConst. Exp15 ::= QualifiedConst ;
+ExpIndexing. Exp15 ::= Exp "[" Name "]" ;
+-- 15	e(e,...,e)	function call
+ExpFuncCall. Exp15 ::= Exp "(" [Exp] ")" ;
+-- 14	e.e, e->e	structure projection
+ExpStructProj1. Exp14 ::= Exp "." Exp ;
+ExpStructProj2. Exp14 ::= Exp "->" Exp ;
+-- 14	e++, e--, *e	in/decrement, dereferencing
+ExpIncrSuf. Exp13 ::= Exp "++" ;
+ExpDecSuf. Exp13 ::= Exp "--" ;
+ExpDeref. Exp13 ::= Exp "*" ;
+-- 13	++e, --e, !e	in/decrement, dereferencing, negation
+ExpIncrPref. Exp13 ::= "++" Exp ;
+ExpDecPref. Exp13 ::= "--" Exp ;
+ExpNeg. Exp13 ::= "!" Exp ;
+-- 12	e*e, e/e, e%e	multiplication, division, remainder
+-- 11	e+e, e-e	addition, subtraction
+-- 10	e<<e, e>>e	left and right shift
+ExpLeftShift. Exp10 ::= Exp "<<" Exp ;
+ExpRightShift. Exp10 ::= Exp ">>" Exp ;
+-- 9	e<e, e>e, e>=e, e<=e	comparison
+-- 8	e==e, e!=e	(in)equality
+-- 4	e&&eq	conjunction
+-- 3	e||e	disjunction
+-- 2	e=e, e+=e, e-=e	assignment
+-- 2	e ? e : e	conditional
+-- 1	throw e	exception
+ExpThrow. Exp ::=  "throw" Exp ;
+
+coercions Exp 16 ;
 separator Exp "," ;
 -- *** Types *** --
 Tint. Type ::= "int" ;
@@ -72,4 +99,4 @@ QCTemplElem. QualifiedConst ::= Name "<" Type ">" ;
 token Name (letter (letter | digit | '_')*) ;
 -- A string literal may consist of many can be concatenated strings and in this way divided over lines
 StrEle. Str ::= String ;
-StrCons. Str ::= Str Str
+StrCons. Str ::= Str Str ;
