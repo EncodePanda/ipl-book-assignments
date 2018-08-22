@@ -18,7 +18,9 @@ DefFun. Def ::= Type Name "(" [Arg] ")" Body ;
 DefInlineFun. Def ::= "inline" Type Name "(" [Arg] ")" Body ;
 -- Finally, definitions for using qualified constants are allowed
 DefQualifiedConst. Def ::= "using" QualifiedConst ";" ;
-
+-- Many statements can be used as top-level definitions: variable declarations and initializations
+-- Many statements can be used as top-level definitions: typedef statements
+--- ???
 -- *** Argument lists, declarations and function bodies *** --
 -- An argument list is a comma-separated list of argument declarations. It is enclosed in parentheses ( and ).
 separator Arg "," ;
@@ -37,11 +39,18 @@ StmDec. Stm ::= Decl ";" ;
 StmRet. Stm ::= "return" Exp ";" ;
 -- While loops, with an expression in parentheses followed by a statement:
 StmWhile. Stm ::= "while" "(" Exp ")" Stm ;
+-- Conditionals: if with an expression in parentheses followed by a statement and optionally by else and a statement.
+StmIf. Stm ::= "if" "(" Exp ")" Stm ;
+StmIfElse. Stm ::= "if" "(" Exp ")" Stm "else" Stm;
+-- Blocks: any list of statement (including empty list) between curly brackets.
+StmBlock. Stm ::= "{" [Stm] "}" ;
 terminator Stm "" ;
 
 -- *** Declarations ***
 -- Declarations have the same form as argument declarations in functions,
 DeclTypeNames. Decl ::= Type DeclNames ;
+DeclTypeNameInit. Decl ::= Type Name "=" Exp ;
+DeclInit. Decl ::= Name "=" Exp ;
 DeclTypeDef. Decl ::= "typedef" Type DeclNames ;
 DecNamesElem. DeclNames ::= Name ;
 DecNamesCons. DeclNames ::= DeclNames "," Name ;
@@ -54,7 +63,7 @@ ExpLit. Exp16 ::= Name ;
 ExpStrLit. Exp16 ::= Str ;
 -- 15	e[i], c::i	indexing and qualified constants
 ExpQualiConst. Exp15 ::= QualifiedConst ;
-ExpIndexing. Exp15 ::= Exp "[" Name "]" ;
+ExpIndexing. Exp15 ::= Exp "[" Exp "]" ;
 -- 15	e(e,...,e)	function call
 ExpFuncCall. Exp15 ::= Exp "(" [Exp] ")" ;
 -- 14	e.e, e->e	structure projection
