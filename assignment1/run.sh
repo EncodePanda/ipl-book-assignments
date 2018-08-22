@@ -8,4 +8,6 @@ echo "Example 3"
 ./src/TestCPP -s example3.cc
 echo "Example 4"
 ./src/TestCPP -s example4.cc
+echo "Example 5"
+./src/TestCPP -s example5.cc
 
