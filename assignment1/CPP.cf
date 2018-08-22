@@ -24,7 +24,14 @@ DefQualifiedConst. Def ::= "using" QualifiedConst ";" ;
 -- *** Argument lists, declarations and function bodies *** --
 -- An argument list is a comma-separated list of argument declarations. It is enclosed in parentheses ( and ).
 separator Arg "," ;
+-- An argument declaration always has a type
+ArgTyp. Arg ::= Type ;
+-- This type is optionally followed by an identifier 
 ArgTypName. Arg ::= Type Name ;
+-- or an identifier and an initialization
+ArgTypNameInit. Arg ::= Type Name "=" Exp ;
+-- and optionally preceded by the specifier const.
+ArgConst. Arg ::= "const" Arg ;
 -- A function body is either a list of statements enclosed in curly brackets
 BodyStmList. Body ::= "{" [Stm] "}" ;
 -- or an empty body consisting of a semicolon
@@ -111,9 +118,8 @@ ExpThrow. Exp1 ::=  "throw" Exp ;
 coercions Exp 16 ;
 separator Exp "," ;
 -- *** Types *** --
-Tint. Type ::= "int" ;
-Tdouble. Type ::= "double" ;
-TQualifiedConst. Type ::= QualifiedConst ;
+TypeAmper. Type ::= QualifiedConst "&" ;
+TypeQualifiedConst. Type ::= QualifiedConst ;
 
 -- Qualified constants are constant names separated by ::. 
 QCElem. QualifiedConst ::= Name ;
